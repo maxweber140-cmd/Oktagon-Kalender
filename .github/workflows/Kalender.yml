@@ -1,0 +1,30 @@
+name: Oktagon Kalender
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Python installieren
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+          
+      - name: Pakete installieren
+        run: |
+          pip install requests beautifulsoup4 pytz
+          
+      - name: Kalender erstellen
+        run: python generate_calendar.py
+          
+      - name: Kalender hochladen
+        uses: actions/upload-artifact@v4
+        with:
+          name: oktagon-kalender
+          path: oktagon_kalender.ics
