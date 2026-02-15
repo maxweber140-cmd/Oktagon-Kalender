@@ -1,0 +1,33 @@
+name: Oktagon Kalender Update
+
+on:
+  schedule:
+    # Läuft jeden Tag um 6:00 Uhr morgens
+    - cron: '0 6 * * *'
+  workflow_dispatch:  # Ermöglicht manuelles Starten
+
+jobs:
+  update-kalender:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Repository herunterladen
+      uses: actions/checkout@v4
+      
+    - name: Python einrichten
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+        
+    - name: Pakete installieren
+      run: |
+        pip install requests beautifulsoup4 pytz
+        
+    - name: 📅 Kalender-Skript ausführen
+      run: python generate_calendar.py
+      
+    - name: 📁 Kalenderdatei hochladen
+      uses: actions/upload-artifact@v4
+      with:
+        name: oktagon-kalender
+        path: oktagon_kalender.ics
