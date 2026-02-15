@@ -1,34 +1,33 @@
 name: Update Oktagon Calendar
 
 on:
-  schedule:
-    - cron: '0 6 * * *'
   workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *"
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Repository klonen
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Python installieren
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: "3.10"
 
-      - name: Abhängigkeiten installieren
-        run: |
-          pip install requests beautifulsoup4 pytz
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 pytz
 
-      - name: Kalender generieren
+      - name: Generate calendar
         run: python generate_calendar.py
 
-      - name: Datei committen
+      - name: Commit calendar
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add oktagon_kalender.ics
-          git commit -m "Kalender automatisch aktualisiert" || echo "Keine Änderungen"
+          git commit -m "Auto update calendar" || echo "No changes"
           git push
